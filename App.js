@@ -1,6 +1,7 @@
 // import React from 'react';
 // import { NavigationContainer } from '@react-navigation/native';
 // import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
+// import { createStackNavigator } from '@react-navigation/stack';
 // import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 // import { Ionicons } from '@expo/vector-icons';
 
@@ -8,8 +9,10 @@
 // import LabelsScreen from './screens/LabelsScreen';
 // import FoldersScreen from './screens/FoldersScreen';
 // import TrashScreen from './screens/TrashScreen';
-
+// import NewNoteScreen from './screens/NewNoteScreen';
+// import EditNoteScreen from './screens/EditNoteScreen';
 // const Drawer = createDrawerNavigator();
+// const Stack = createStackNavigator();
 
 // function CustomHeader({ navigation, isSearchVisible, setIsSearchVisible, setSearchQuery, handleSearch }) {
 //   return {
@@ -42,6 +45,7 @@
 //     ),
 //   };
 // }
+
 // function CustomDrawerContent(props) {
 //   return (
 //     <DrawerContentScrollView {...props}>
@@ -66,30 +70,58 @@
 //       <Drawer.Screen
 //         name="Labels"
 //         component={LabelsScreen}
-//         options={({ navigation }) => CustomHeader({ navigation, isSearchVisible, setIsSearchVisible })}
+//         options={({ navigation }) => ({
+//           headerLeft: () => (
+//             <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 10 }}>
+//               <Ionicons name="menu" size={24} color="black" />
+//             </TouchableOpacity>
+//           ),
+//           headerTitle: 'Labels',
+//         })}
 //       />
 //       <Drawer.Screen
 //         name="Folders"
 //         component={FoldersScreen}
-//         options={({ navigation }) => CustomHeader({ navigation, isSearchVisible, setIsSearchVisible })}
-//       />
+//         options={({ navigation }) => ({
+//           headerLeft: () => (
+//             <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 10 }}>
+//               <Ionicons name="menu" size={24} color="black" />
+//             </TouchableOpacity>
+//           ),
+//           headerTitle: 'Folders',
+//         })}      />
 //       <Drawer.Screen
 //         name="Trash"
 //         component={TrashScreen}
-//         options={({ navigation }) => CustomHeader({ navigation, isSearchVisible, setIsSearchVisible })}
-//       />
+//         options={({ navigation }) => ({
+//           headerLeft: () => (
+//             <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 10 }}>
+//               <Ionicons name="menu" size={24} color="black" />
+//             </TouchableOpacity>
+//           ),
+//           headerTitle: 'Trash',
+//         })}      />
 //     </Drawer.Navigator>
+//   );
+// }
+
+// function MyStack() {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen name="Drawer" component={MyDrawer} options={{ headerShown: false }} />
+//       <Stack.Screen name="NewNote" component={NewNoteScreen} />
+//       <Stack.Screen name="EditNote" component={EditNoteScreen} />
+//     </Stack.Navigator>
 //   );
 // }
 
 // export default function App() {
 //   return (
 //     <NavigationContainer>
-//       <MyDrawer />
+//       <MyStack />
 //     </NavigationContainer>
 //   );
 // }
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
@@ -102,7 +134,7 @@ import LabelsScreen from './screens/LabelsScreen';
 import FoldersScreen from './screens/FoldersScreen';
 import TrashScreen from './screens/TrashScreen';
 import NewNoteScreen from './screens/NewNoteScreen';
-
+import EditNoteScreen from './screens/EditNoteScreen';
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
@@ -117,24 +149,6 @@ function CustomHeader({ navigation, isSearchVisible, setIsSearchVisible, setSear
       </View>
     ),
     headerTitle: '',
-    headerRight: () => (
-      <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
-        <TextInput
-          placeholder="Search notes"
-          onChangeText={setSearchQuery}
-          onSubmitEditing={handleSearch}
-          style={{
-            padding: 10,
-            borderColor: '#ccc',
-            borderWidth: 1,
-            borderRadius: 8,
-            width: 200, 
-          }}
-        />
-        <Ionicons name="search" size={20} color="black" />
-      </View>
-      
-    ),
   };
 }
 
@@ -162,18 +176,37 @@ function MyDrawer() {
       <Drawer.Screen
         name="Labels"
         component={LabelsScreen}
-        options={({ navigation }) => CustomHeader({ navigation, isSearchVisible, setIsSearchVisible })}
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 10 }}>
+              <Ionicons name="menu" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          headerTitle: 'Labels',
+        })}
       />
       <Drawer.Screen
         name="Folders"
         component={FoldersScreen}
-        options={({ navigation }) => CustomHeader({ navigation, isSearchVisible, setIsSearchVisible })}
-      />
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 10 }}>
+              <Ionicons name="menu" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          headerTitle: 'Folders',
+        })}      />
       <Drawer.Screen
         name="Trash"
         component={TrashScreen}
-        options={({ navigation }) => CustomHeader({ navigation, isSearchVisible, setIsSearchVisible })}
-      />
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()} style={{ marginLeft: 10 }}>
+              <Ionicons name="menu" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          headerTitle: 'Trash',
+        })}      />
     </Drawer.Navigator>
   );
 }
@@ -183,6 +216,7 @@ function MyStack() {
     <Stack.Navigator>
       <Stack.Screen name="Drawer" component={MyDrawer} options={{ headerShown: false }} />
       <Stack.Screen name="NewNote" component={NewNoteScreen} />
+      <Stack.Screen name="EditNote" component={EditNoteScreen} />
     </Stack.Navigator>
   );
 }
@@ -194,4 +228,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
 

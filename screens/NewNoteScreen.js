@@ -4,9 +4,15 @@ import { View, TextInput, Button, StyleSheet } from 'react-native';
 const NewNoteScreen = ({ route, navigation }) => {
   const [text, setText] = useState('');
 
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      addNoteCallback: route.params.addNoteCallback,
+    });
+  }, [navigation, route.params.addNoteCallback]);
+
   const handleAddNote = () => {
     const newNote = { id: Date.now(), text };
-    if (route && route.params && route.params.addNoteCallback) { // Kiểm tra route và params có tồn tại và chứa addNoteCallback không
+    if (route && route.params && route.params.addNoteCallback) {
       route.params.addNoteCallback(newNote);
     }
     navigation.goBack();

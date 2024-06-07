@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
+
 
 const EditNoteScreen = ({ route, navigation }) => {
   const { note } = route.params;
   const [text, setText] = useState(note.text);
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          onPress={handleSaveNote}
+          title="Save"
+        />
+      ),
+    });
+  }, [text]);
+
   const handleSaveNote = () => {
-    note.text = text;
-    navigation.navigate('Home', { updatedNote: note });
+    const updatedNote = { ...note, text };
+    if (route.params.updateNoteCallback) {
+      route.params.updateNoteCallback(updatedNote);
+    }
+    navigation.navigate('Home', { updatedNote });
   };
 
   return (
@@ -17,7 +32,6 @@ const EditNoteScreen = ({ route, navigation }) => {
         onChangeText={setText}
         style={styles.input}
       />
-      <Button title="Save Note" onPress={handleSaveNote} />
     </View>
   );
 };
@@ -37,4 +51,3 @@ const styles = StyleSheet.create({
 });
 
 export default EditNoteScreen;
-
