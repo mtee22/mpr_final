@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Button } from 'react-native';
-import { LABELS } from '../models/dummy-data'; // Import dummy data
+import { LABELS } from '../models/dummy-data'; 
 
 const ManageLabelsScreen = ({ route, navigation }) => {
   const { note, updateNoteCallback } = route.params;
-  const [labels, setLabels] = useState(LABELS); // Assume LABELS is an array of objects with id and label properties
+  const [labels, setLabels] = useState(LABELS); 
   const [noteLabels, setNoteLabels] = useState(note.labels || []);
   const [newLabel, setNewLabel] = useState('');
 
   useEffect(() => {
-    // Sync note labels with initial state
     const noteLabelIds = note.labels || [];
     setNoteLabels(noteLabelIds);
   }, [note]);
