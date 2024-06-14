@@ -2,31 +2,31 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 
 const NewNoteScreen = ({ route, navigation }) => {
-  const [text, setText] = useState('');
+  const [content, setContent] = useState('');
+  const { addNoteCallback } = route.params;
 
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      addNoteCallback: route.params.addNoteCallback,
-    });
-  }, [navigation, route.params.addNoteCallback]);
-
-  const handleAddNote = () => {
-    const newNote = { id: Date.now(), text };
-    if (route && route.params && route.params.addNoteCallback) {
-      route.params.addNoteCallback(newNote);
-    }
+  const handleSave = () => {
+    const newNote = {
+      id: Date.now(),
+      content,
+      updateAt: new Date(),
+      labelIds: [], 
+      color: '#FFFFFF', 
+      isBookmarked: false, 
+    };
+    addNoteCallback(newNote);
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Enter note text"
-        value={text}
-        onChangeText={setText}
+        placeholder="Note content"
+        value={content}
+        onChangeText={setContent}
         style={styles.input}
       />
-      <Button title="Add Note" onPress={handleAddNote} />
+      <Button title="Save Note" onPress={handleSave} />
     </View>
   );
 };

@@ -1,89 +1,73 @@
-// // screens/LabelsScreen.js
-
-// import React from 'react';
-// import { View, Text, Button } from 'react-native';
-
-// const LabelsScreen = ({ navigation }) => (
-//   <View>
-//     <Text>Labels Screen</Text>
-//     <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-//     <Button title="Manage Labels" onPress={() => navigation.navigate('ManageLabels')} />
-//   </View>
-// );
-
-// export default LabelsScreen;
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Modal, TextInput, Button, FlatList, StyleSheet } from 'react-native';
+import { LABELS } from '../models/dummy-data'; 
 
-// Define the LabelsScreen component
 const LabelsScreen = () => {
-  // State for modal visibility, selected label, edited label name, and search query
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [editedLabelName, setEditedLabelName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [labels, setLabels] = useState([]);
 
-  // Sample labels
-  const sampleLabels = [
-    { id: 'l1', name: 'React Native' },
-    { id: 'l2', name: 'Final Exam' },
-    { id: 'l3', name: 'Mini Project' },
-    { id: 'l4', name: 'Team Work' },
-    { id: 'l5', name: 'React Basic' },
-  ];
-
-  // Effect to update labels when component mounts
   useEffect(() => {
-    setLabels(sampleLabels);
+    setLabels(LABELS);
   }, []);
 
-  // Function to handle label selection
   const handleLabelPress = (label) => {
     setSelectedLabel(label);
-    setEditedLabelName(label.name); // Set initial value for the edited label name
+    setEditedLabelName(label.label);
     setModalVisible(true);
   };
 
-  // Function to handle editing a label
   const handleEditLabel = () => {
-    // Update the selected label with the edited name
     const updatedLabels = labels.map((item) =>
-      item.id === selectedLabel.id ? { ...item, name: editedLabelName } : item
+      item.id === selectedLabel.id ? { ...item, label: editedLabelName } : item
     );
     setLabels(updatedLabels);
-    setModalVisible(false); // Close the modal after editing
+    setModalVisible(false);
   };
 
-  // Function to filter labels based on search query
+  const handleDeleteLabel = () => {
+    const updatedLabels = labels.filter((item) => item.id !== selectedLabel.id);
+    setLabels(updatedLabels);
+    setModalVisible(false);
+  };
+
   const filteredLabels = labels.filter((label) =>
-    label.name.toLowerCase().includes(searchQuery.toLowerCase())
+    label.label && label.label.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Function to render each label item
   const renderLabelItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleLabelPress(item)} style={styles.labelButton}>
-      <Text>{item.name}</Text>
+      <Text>{item.label}</Text>
     </TouchableOpacity>
   );
 
+  const handleCreateLabel = () => {
+    const newLabelId = Math.random().toString(36).substr(2, 9);
+    const newLabel = { id: newLabelId, label: '' };
+    setLabels([...labels, newLabel]);
+    setSelectedLabel(newLabel);
+    setEditedLabelName('');
+    setModalVisible(true);
+  };
+
   return (
     <View style={styles.container}>
-      {/* Search bar */}
       <TextInput
-        placeholder="Search labels..."
+        placeholder="Search ..."
         value={searchQuery}
         onChangeText={setSearchQuery}
         style={styles.searchInput}
       />
-      {/* FlatList to display the list of labels */}
       <FlatList
-        data={filteredLabels} // Use filtered labels
+        data={filteredLabels}
         renderItem={renderLabelItem}
-        keyExtractor={(item) => item.id.toString()} // Ensure the key is a string
+        keyExtractor={(item) => item.id}
       />
-      {/* Modal for editing the selected label */}
+      <View style={styles.createButtonContainer}>
+        <Button title="Create a new Label" onPress={handleCreateLabel} />
+      </View>
       <Modal
         animationType="slide"
         transparent={true}
@@ -92,25 +76,25 @@ const LabelsScreen = () => {
       >
         <View style={styles.modalContainer}>
           {selectedLabel && (
-            <View>
-              <Text>Edit Label: {selectedLabel.name}</Text>
-              {/* TextInput and Button for editing the label */}
+            <View style={styles.modalContent}>
               <TextInput
                 value={editedLabelName}
                 onChangeText={setEditedLabelName}
                 style={styles.input}
+                autoFocus
               />
-              <Button title="Save" onPress={handleEditLabel} />
+              <View style={styles.modalButtons}>
+                <Button title="Save" onPress={handleEditLabel} />
+                <Button title="Delete" onPress={handleDeleteLabel} color="red" />
+              </View>
             </View>
           )}
-          <Button title="Close" onPress={() => setModalVisible(false)} />
         </View>
       </Modal>
     </View>
   );
 };
 
-// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -121,6 +105,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     marginBottom: 10,
+    borderRadius: 8,
   },
   searchInput: {
     padding: 10,
@@ -129,11 +114,21 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 8,
   },
+  createButtonContainer: {
+    marginBottom: 10,
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '80%',
   },
   input: {
     padding: 10,
@@ -141,6 +136,13 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     marginBottom: 10,
     borderRadius: 8,
+    width: '100%',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 10,
   },
 });
 

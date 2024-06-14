@@ -1,11 +1,12 @@
-export class Note {
-    constructor(id, content, labels = [], color = 'white', isBookmarked = false) {
-      this.id = id;
-      this.content = content;
-      this.labels = labels;
-      this.color = color;
-      this.isBookmarked = isBookmarked;
-      this.isInTrash = false;
-    }
+class Note {
+  constructor(id, color, labelIds, content, updateAt, isBookmarked) {
+    this.id = id;
+    this.color = color;
+    this.labelIds = labelIds;
+    this.content = content;
+    this.updateAt = updateAt;
+    this.isBookmarked = isBookmarked;
   }
-  
+}
+
+export default Note;
