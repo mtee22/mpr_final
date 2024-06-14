@@ -95,7 +95,6 @@ function MyStack() {
       <Stack.Screen name="NewNote" component={NewNoteScreen} />
       <Stack.Screen name="EditNote" component={EditNoteScreen} />
       <Stack.Screen name="ManageLabels" component={ManageLabelsScreen} />
-      {/* <Stack.Screen name="Trash" component={TrashScreen} /> */}
     </Stack.Navigator>
   );
 }
